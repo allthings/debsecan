@@ -1,31 +1,25 @@
 # debsecan - Debian Security Analyzer
 
 ## Usage
-Expose the `dpkg` directory of the target docker image, e.g. `debian:jessie`:
 
 ```sh
-docker run --entrypoint true -v /var/lib/dpkg --name debsecan_target \
-  debian:jessie
+./debsecan.sh docker/image:tag [debsecan_args...]
 ```
 
-Run `debsecan` with the `dpkg` volume of the target docker image:
+See the [debsecan homepage](http://www.enyo.de/fw/software/debsecan/) for
+available arguments.
+
+## Examples
+Display detailed information about open CVEs in the `debian:jessie` image:
 
 ```sh
-docker run --rm --volumes-from=debsecan_target qipp/debsecan \
-  --format detail
+./debsecan.sh debian:jessie --format detail
 ```
 
-Alternatively, show only CVEs with an available fix in the Debian repositories:
+Only list CVEs for packages that have been fixed in the Debian repositories:
 
 ```sh
-docker run --rm --volumes-from=debsecan_target qipp/debsecan \
-  --suite jessie --only-fixed
-```
-
-Remove the target docker image:
-
-```sh
-docker rm -vf debsecan_target
+./debsecan.sh debian:jessie --suite jessie --only-fixed
 ```
 
 ## License
