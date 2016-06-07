@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck shell=dash
 
 #
 # Uses debsecan to list CVEs for installed packages in a Debian Docker image.
