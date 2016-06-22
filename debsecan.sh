@@ -16,7 +16,9 @@ set -e
 
 # Removes the temporary docker container:
 cleanup() {
-  docker rm -vf debsecan_target > /dev/null
+  if [ ! -z "$DEBSECAN_TARGET" ]; then
+    docker rm -vf "$DEBSECAN_TARGET" > /dev/null
+  fi
 }
 
 if [ $# -eq 0 ]; then
@@ -25,7 +27,7 @@ if [ $# -eq 0 ]; then
 fi
 
 # Create a temporary docker container to expose the dpkg directory:
-docker run --entrypoint true -v /var/lib/dpkg --name debsecan_target "$1"
+DEBSECAN_TARGET=$(docker run -d --entrypoint true -v /var/lib/dpkg "$1")
 
 # Run the cleanup function on SIGINT or SIGTERM:
 trap 'cleanup' INT TERM
@@ -34,6 +36,6 @@ trap 'cleanup' INT TERM
 shift
 
 # Run debsecan with the given arguments:
-docker run --rm --volumes-from=debsecan_target qipp/debsecan "$@"
+docker run --rm --volumes-from="$DEBSECAN_TARGET" qipp/debsecan "$@"
 
 cleanup
