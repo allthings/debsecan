@@ -16,7 +16,9 @@ RUN DEBIAN_FRONTEND=noninteractive \
     /usr/share/doc/* \
     /var/cache/* \
     /var/lib/apt/lists/* \
-    /var/tmp/*
+    /var/tmp/* \
+  # Patch debsecan to add "stretch" (Debian 9) as target suite:
+  && sed -i "s/'jessie', /&'stretch', /" /usr/bin/debsecan
 
 ENTRYPOINT ["debsecan"]
 
