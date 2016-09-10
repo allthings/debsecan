@@ -3,6 +3,7 @@
 
 #
 # Uses debsecan to list CVEs for installed packages in a Debian Docker image.
+# Returns with exit status 1 if any CVEs are found, else with exit status 0.
 #
 # Usage: ./debsecan.sh docker_image [debsecan_args...]
 #
@@ -21,9 +22,24 @@ cleanup() {
   fi
 }
 
-if [ $# -eq 0 ]; then
+if [ $# -eq 0 ] || [ "$1" = -h ] || [ "$1" = --help ]; then
   echo 'Usage: ./debsecan.sh docker_image [debsecan_args...]' >&2
 	exit 1
+fi
+
+# Pull the allthings/debsecan image if it's not available locally:
+if [ "$(docker images -q allthings/debsecan:latest 2> /dev/null)" = '' ]; then
+  docker pull allthings/debsecan:latest > /dev/null
+fi
+
+if [ "$2" = -h ] || [ "$2" = --help ]; then
+  docker run --rm allthings/debsecan --help
+	exit $?
+fi
+
+# Pull the target image if it's not available locally:
+if [ "$(docker images -q "$1" 2> /dev/null)" = '' ]; then
+  docker pull "$1" > /dev/null
 fi
 
 # Create a temporary docker container to expose the dpkg directory:
@@ -35,7 +51,11 @@ trap 'cleanup' INT TERM
 # Remove the docker_image from the arguments list:
 shift
 
-# Run debsecan with the given arguments:
-docker run --rm --volumes-from="$DEBSECAN_TARGET" allthings/debsecan "$@"
+# Run debsecan and return exit status 1 if any CVEs are found:
+if docker run --rm --volumes-from="$DEBSECAN_TARGET" allthings/debsecan "$@" |
+  grep . -; then
+  cleanup
+  exit 1
+fi
 
 cleanup
