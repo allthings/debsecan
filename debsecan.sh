@@ -36,6 +36,6 @@ trap 'cleanup' INT TERM
 shift
 
 # Run debsecan with the given arguments:
-docker run --rm --volumes-from="$DEBSECAN_TARGET" qipp/debsecan "$@"
+docker run --rm --volumes-from="$DEBSECAN_TARGET" allthings/debsecan "$@"
 
 cleanup
