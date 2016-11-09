@@ -3,8 +3,8 @@
 FROM debian:jessie
 
 # Install debsecan and ca-certificates for SSL certificate validation:
-RUN DEBIAN_FRONTEND=noninteractive \
-  apt-get update \
+RUN export DEBIAN_FRONTEND=noninteractive \
+  && apt-get update \
   && apt-get dist-upgrade -y \
   && apt-get install --no-install-recommends --no-install-suggests -y \
     debsecan \
