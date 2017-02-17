@@ -23,4 +23,4 @@ Only list CVEs for packages that have been fixed in the Debian repositories:
 ```
 
 ## License
-Released under the [MIT license](http://www.opensource.org/licenses/MIT).
+Released under the [MIT license](https://opensource.org/licenses/MIT).
