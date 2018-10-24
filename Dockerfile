@@ -21,5 +21,3 @@ RUN export DEBIAN_FRONTEND=noninteractive \
   && sed -i "s/'jessie', /&'stretch', /" /usr/bin/debsecan
 
 ENTRYPOINT ["debsecan"]
-
-CMD [""]
