@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck shell=dash
 
 #
 # Uses debsecan to list CVEs for installed packages in a Debian Docker image.
@@ -17,7 +16,7 @@ set -e
 
 # Removes the temporary docker container:
 cleanup() {
-  if [ ! -z "$DEBSECAN_TARGET" ]; then
+  if [ -n "$DEBSECAN_TARGET" ]; then
     docker rm -vf "$DEBSECAN_TARGET" > /dev/null
   fi
 }
